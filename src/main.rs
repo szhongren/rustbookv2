@@ -1,18 +1,18 @@
-extern crate rand;
-
-use std::io;
+mod section01;
+mod section02;
+mod section03;
 
 fn main() {
-    hello_1_2();
+    section01::hello_1_2();
     div();
-    // guessing_game_2();
-    variables_3_1();
+    // section02::guessing_game_2();
+    section03::variables_3_1();
     div();
-    data_types_3_2();
+    section03::data_types_3_2();
     div();
-    functions_3_3();
+    section03::functions_3_3();
     div();
-    control_flow_3_5();
+    section03::control_flow_3_5();
     div();
     ownership_4_1();
     div();
@@ -27,139 +27,14 @@ fn main() {
     method_syntax_5_3();
     div();
     defining_an_enum_6_1();
+    div();
+    match_control_flow_6_2();
 }
 
 fn div() {
     println!("--------------------------------------------------------------------------------");
 }
 
-fn hello_1_2() {
-    println!("Hello, world!") // macro and implicit return
-}
-
-#[allow(dead_code)]
-fn guessing_game_2() {
-    use rand::Rng;
-    use std::cmp::Ordering;
-
-    println!("Guess the number!");
-
-    let secret_number = rand::thread_rng().gen_range(1, 101);
-
-    println!("The secret number is {}", secret_number);
-    loop {
-        println!("Please input your guess:");
-
-        let mut guess = String::new(); // static method
-
-        io::stdin() // static method
-            .read_line(&mut guess) // read into mut ref
-            .expect("Failed to read line"); // expect a Result, print string on error
-        // a Result is an enum that can be either a Ok<type> or Err<type>
-
-        let guess: u32 = match guess.trim().parse() {
-            Ok(num) => num,
-            Err(_) => {
-                println!("Invalid input!");
-                continue;
-            }
-        }; // match on the result of parse
-
-        println!("You guessed: {}", guess);
-
-        match guess.cmp(&secret_number) {
-            Ordering::Less => println!("Too small!"),
-            Ordering::Greater => println!("Too big!"),
-            Ordering::Equal => {
-                println!("You win!");
-                break;
-            },
-        }
-    }
-}
-
-fn variables_3_1() {
-    let mut x = 5;
-    println!("The value of x is {}", x);
-
-    x = 6;
-    println!("The value of x is now {}", x);
-}
-
-#[allow(unused_variables)]
-fn data_types_3_2() {
-    // scalar types
-    let decimal: u32= 98_222;
-    let hexadecimal: u64 = 0xdeadbeef;
-    let octal: u8= 0o77;
-    let binary: u8 = 0b1010_1010;
-    let byte: u8 = b'B';
-    let floating_point: f64 = 4.2;
-
-    // booleans
-    let a = true;
-    let b: bool = false;
-
-    let heart_eyed_cat = '😻'; // unicode!!!
-    println!("{}", heart_eyed_cat);
-
-    // tuple
-    let tup: (i32, f64, u8) = (500, 6.4, 1);
-    let (x, y, z) = tup;
-    println!("The value of y is: {}", y);
-    println!("The value of x is: {}", tup.0);
-
-    let arr = [1, 2, 3, 4, 5];
-    let first = arr[0];
-    println!("The value of first is: {}", first);
-}
-
-#[allow(unused_variables)]
-fn functions_3_3() -> u32{
-    let x = 8; // statement, performs an action and does not return a value
-    let y = {
-        let x = 3;
-        x + 2
-    }; // expression, returns a value
-    y
-}
-
-fn control_flow_3_5() {
-    let number = 3;
-    if number > 5 {
-        println!("{} was bigger than 5", number);
-    } else {
-        println!("{} was smaller than 5", number);
-    }
-
-    let test = if true {
-        88
-    } else {
-        0
-    };
-    println!("test was assigned a value of {}", test);
-
-    let mut i = 0;
-
-    loop {
-        i += 1;
-        if i >= 10 {
-            break;
-        }
-        println!("loop: {}", i);
-    }
-
-    while i >= -5 {
-        i -= 1;
-        println!("while: {}", i);
-    }
-
-    let a = [10, 20, 30, 40, 50];
-    for (k, v) in a.iter().rev().enumerate() {
-        println!("The value of element {} is {}", k, v);
-    }
-
-}
 
 fn ownership_4_1() {
     println!("1. Each value in Rust has a variable that's called its owner.");
@@ -402,4 +277,87 @@ fn defining_an_enum_6_1() {
         println!("{:#?}", home);
         println!("{:#?}", loopback);
     }
+
+    #[allow(dead_code)]
+    enum Message {
+        Quit,
+        Move { x: i32, y: i32 },
+        Write(String),
+        ChangeColor(i32, i32, i32),
+    }
+}
+
+fn match_control_flow_6_2() {
+    {
+        enum Coin {
+            Penny,
+            Nickel,
+            Dime,
+            Quarter,
+        }
+
+        fn value_in_cents(coin: Coin) -> u32 {
+            match coin {
+                Coin::Penny => 1,
+                Coin::Nickel => 5,
+                Coin::Dime => 10,
+                Coin::Quarter => 25,
+            }
+        }
+
+        println!("The value of a penny is {}", value_in_cents(Coin::Penny));
+        println!("The value of a nickel is {}", value_in_cents(Coin::Nickel));
+        println!("The value of a dime is {}", value_in_cents(Coin::Dime));
+        println!("The value of a quarter is {}", value_in_cents(Coin::Quarter));
+    }
+
+    {
+        // binding in match arms
+        #[derive(Debug)] // So we can inspect the state in a minute
+        enum UsState {
+            Alabama,
+            Alaska,
+        }
+
+        enum Coin {
+            Penny,
+            Nickel,
+            Dime,
+            Quarter(UsState),
+        }
+
+        fn value_in_cents(coin: Coin) -> u32 {
+            match coin {
+                Coin::Penny => 1,
+                Coin::Nickel => 5,
+                Coin::Dime => 10,
+                Coin::Quarter(state) => {
+                    println!("State quarter from {:?}!", state);
+                    25
+                },
+            }
+        }
+
+        println!("The value of a penny is {}", value_in_cents(Coin::Penny));
+        println!("The value of a nickel is {}", value_in_cents(Coin::Nickel));
+        println!("The value of a dime is {}", value_in_cents(Coin::Dime));
+        println!("The value of a quarter is {}", value_in_cents(Coin::Quarter(UsState::Alaska)));
+        println!("The value of a quarter is {}", value_in_cents(Coin::Quarter(UsState::Alabama)));
+    }
+
+    // using options in functions that can chain and implement error handling
+    fn plus_one(x: Option<i32>) -> Option<i32> {
+        match x {
+            None => None,
+            Some(i) => Some(i + 1),
+        }
+    }
+
+    let five = Some(5);
+    let six = plus_one(five);
+    let none = plus_one(None);
+
+    println!("{:?}", five);
+    println!("{:?}", six);
+    println!("{:?}", none);
 }
