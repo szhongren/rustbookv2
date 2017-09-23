@@ -5,6 +5,7 @@ mod section04;
 mod section05;
 mod section06;
 mod section07;
+mod section08;
 
 fn main() {
     section01::hello_1_2();
@@ -39,6 +40,12 @@ fn main() {
     section07::mod_and_the_filesystem_7_1();
     div();
     section07::importing_names_with_use_7_3();
+    div();
+    section08::vectors_8_1();
+    div();
+    section08::strings_8_2();
+    div();
+    section08::hashmaps_8_3();
 }
 
 fn div() {
