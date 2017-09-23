@@ -4,6 +4,7 @@ mod section03;
 mod section04;
 mod section05;
 mod section06;
+mod section07;
 
 fn main() {
     section01::hello_1_2();
@@ -34,6 +35,10 @@ fn main() {
     section06::match_control_flow_6_2();
     div();
     section06::concise_control_flow_if_let_6_3();
+    div();
+    section07::mod_and_the_filesystem_7_1();
+    div();
+    section07::importing_names_with_use_7_3();
 }
 
 fn div() {
