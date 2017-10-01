@@ -6,6 +6,7 @@ mod section05;
 mod section06;
 mod section07;
 mod section08;
+mod section09;
 
 fn main() {
     section01::hello_1_2();
@@ -46,6 +47,12 @@ fn main() {
     section08::strings_8_2();
     div();
     section08::hashmaps_8_3();
+    div();
+    section09::panic_9_1();
+    div();
+    section09::result_9_2();
+    div();
+    section09::panic_or_not_9_3();
 }
 
 fn div() {
