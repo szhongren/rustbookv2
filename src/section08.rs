@@ -58,5 +58,48 @@ pub fn strings_8_2() {
 }
 
 pub fn hashmaps_8_3() {
+    use std::collections::HashMap;
+    let mut hm = HashMap::new();
+    hm.insert(String::from("Blue"), 10);
+    hm.insert(String::from("Yellow"), 50);
+    println!("{:?}", hm);
 
+    let teams  = vec![String::from("Blue"), String::from("Yellow")];
+    let initial_scores = vec![10, 50];
+    let hm1: HashMap<_, _> = teams.iter().zip(initial_scores.iter()).collect(); // collect gathers up data into colletion types
+    println!("{:?}", hm1);
+
+    println!("types in hash maps follow usual ownership and copy rules");
+
+    let mut hm2 = HashMap::new();
+    hm2.insert(String::from("Blue"), 10);
+    hm2.insert(String::from("Yellow"), 50);
+    println!("{:?}", hm2.get(&String::from("Blue")));
+
+    let mut hm3 = HashMap::new();
+    hm3.insert(String::from("Blue"), 10);
+    hm3.insert(String::from("Yellow"), 50);
+
+    for (key, value) in &hm3 {
+        println!("{}: {}", key, value);
+    }
+
+    let mut hm4 = HashMap::new();
+    hm4.insert(String::from("Blue"), 10);
+    hm4.entry(String::from("Yellow")).or_insert(50);
+    hm4.entry(String::from("Blue")).or_insert(50);
+    println!("{:?}", hm4);
+    println!("insert if key has no value in the hashmap");
+
+    let text = "hello world wonderful world";
+
+    let mut hm5 = HashMap::new();
+
+    for word in text.split_whitespace() {
+        let count = hm5.entry(word).or_insert(0);
+        *count += 1;
+    }
+
+    println!("{:?}", hm5);
+    println!("on_insert returns a mutable reference to the value in the hashmap");
 }
