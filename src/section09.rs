@@ -53,7 +53,31 @@ pub fn result_9_2() {
     println!("{:?}", f4);
 
     let f5 = File::open("Cargo.toml").expect("Failed to open Cargo.toml");
+    // expect takes a string that is used as the panic message
     println!("{:?}", f5);
+
+    use std::io;
+    use std::io::Read;
+
+    fn read_username_from_file(filename: &str) -> Result<String, io::Error> {
+        // propagates the error to the caller
+        let f = File::open(filename);
+
+        let mut f = match f {
+            Ok(file) => file,
+            Err(e) => return Err(e),
+        };
+
+        let mut s = String::new();
+
+        match f.read_to_string(&mut s) {
+            Ok(_) => Ok(s),
+            Err(e) => Err(e),
+        }
+    }
+
+    let f6 = read_username_from_file("Cargo.lock");
+    println!("{:?}", f6);
 }
 
 pub fn panic_or_not_9_3() {
