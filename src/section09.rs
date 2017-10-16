@@ -78,8 +78,30 @@ pub fn result_9_2() {
 
     let f6 = read_username_from_file("Cargo.lock");
     println!("{:?}", f6);
+
+    fn read_username_from_file_1(filename: &str) -> Result<String, io::Error> {
+        let mut s = String::new();
+        File::open(filename)?.read_to_string(&mut s)?; // the ? is syntactical sugar for the match expressions above
+        // ? syntax only works in functions that return a Result
+        // if Ok(), returns the Ok to the statement
+        // if Err(), returns the Err to the whole function's caller
+        Ok(s)
+    }
+
+    let f7 = read_username_from_file_1("test.txt");
+    println!("{:?}", f7);
 }
 
 pub fn panic_or_not_9_3() {
+    println!("When should you panic or not?");
+    println!("When in tests or prototyping, panicking is perfectly fine.");
+    println!("When in a test, panicking is how the test is marked as a failure.");
+    println!("Sometimes, when you have more information than the compiler, it is fine to use unwrap.");
+    println!("Guidelines for when to panic:");
+    println!("When you have bad state and one of the following:");
+    println!("- The bad state is not something that’s expected to happen occasionally");
+    println!("- Your code after this point needs to rely on not being in this bad state");
+    println!("- There’s not a good way to encode this information in the types you use");
 
+    println!("Generally speaking, we want to use types to enforce restrictions on values for a certain variable in our code, so that the function tha tuses it can have some guarantees about the value.");
 }
