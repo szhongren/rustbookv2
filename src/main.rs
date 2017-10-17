@@ -7,6 +7,7 @@ mod section06;
 mod section07;
 mod section08;
 mod section09;
+mod section10;
 
 fn main() {
     section01::hello_1_2();
@@ -53,6 +54,10 @@ fn main() {
     section09::result_9_2();
     div();
     section09::panic_or_not_9_3();
+    div();
+    section10::generic_data_types_10_1();
+    div();
+    section10::traits_defining_shared_behavior_10_2();
 }
 
 fn div() {
