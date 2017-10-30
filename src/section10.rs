@@ -83,7 +83,8 @@ pub fn generic_data_types_10_1() {
     let point1 = Point { x: 2.8, y: 18.88 };
     println!("point1.x = {}", point1.x());
     println!("point1.y = {}", point1.y());
-    println!("point1.distance_from_origin = {}", point1.distance_from_origin());
+    println!("point1.distance_from_origin = {}",
+             point1.distance_from_origin());
 
     struct MixedPoint<T, U> {
         x: T,
@@ -92,7 +93,7 @@ pub fn generic_data_types_10_1() {
 
     impl<T, U> MixedPoint<T, U> {
         fn mixup<V, W>(self, other: MixedPoint<V, W>) -> MixedPoint<T, W> {
-            MixedPoint{
+            MixedPoint {
                 x: self.x,
                 y: other.y,
             }
@@ -100,21 +101,26 @@ pub fn generic_data_types_10_1() {
     }
 
     let point2 = MixedPoint { x: 5, y: 10.4 };
-    let point3 = MixedPoint { x: "Hello", y: 'c'};
+    let point3 = MixedPoint {
+        x: "Hello",
+        y: 'c',
+    };
 
     let point4 = point2.mixup(point3);
 
     println!("point4.x = {}, point4.y = {}", point4.x, point4.y);
 
     println!("Generics in Rust are monomorphized at compile time.");
-    println!("This means that versions of generic code are generated at comilation for each type it is called with.");
+    println!("This means that versions of generic code are generated at comilation for each type \
+              it is called with.");
 }
 
 pub fn traits_defining_shared_behavior_10_2() {
     println!("A trait is an abstraction over behavior that types can have in common.");
     println!("Similar to interfaces in other languages(like Go).");
     println!("A trait tells rustc about what functionality a type has.");
-    println!("A trait bound can be used to specify at compile time that the generic type can be any type that implements that trait.");
+    println!("A trait bound can be used to specify at compile time that the generic type can be \
+              any type that implements that trait.");
     println!("A trait is thus abstract over all types that implement it.");
 
     pub trait Summarizable {
@@ -183,4 +189,84 @@ pub fn traits_defining_shared_behavior_10_2() {
     println!("  or implement an external trait on an your type");
     println!("  but not an external trait on an external type");
     println!("  because of the orphan rule from type theory.");
+
+    println!("When implementing default trait methods, we can call other methods from the same \
+              trait.");
+    println!("We can also conditionally implement methods with trait bounds.");
+
+    use std::fmt::Display;
+
+    struct Pair<T> {
+        x: T,
+        y: T,
+    }
+
+    impl<T> Pair<T> {
+        fn new(x: T, y: T) -> Self {
+            Self { x: x, y: y }
+        }
+    }
+
+    impl<T: Display + PartialOrd> Pair<T> {
+        fn cmp_display(&self) {
+            if self.x >= self.y {
+                println!("The largest member is x = {}", self.x);
+            } else {
+                println!("The largest member is y = {}", self.y);
+            }
+        }
+    }
+
+    let p = Pair::new(1, 2);
+    p.cmp_display();
+}
+
+pub fn validating_references_with_lifetimes_10_3() {
+    println!("Lifetimes prevent dangling references");
+    println!("Lifetimes are scope based");
+
+    fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+        //! all arguments passed in must have the same lifetime as the result
+        if x.len() > y.len() {
+            x
+        } else {
+            y
+        }
+    }
+    let string0 = String::from("abcd");
+    let string1 = "xyz";
+
+    let result = longest(string0.as_str(), string1);
+    println!("The longest string is {}", result);
+
+    println!("The result of a function must have the same lifetime as one of the arguments.");
+    println!("Otherwise, the reference would be dropped at return.");
+
+    println!("Structs can also hold references, but every reference must have a lifetime annotation");
+
+    struct ImportantExcerpt<'a> {
+        part: &'a str
+    }
+
+    let novel = String::from("Call me Ishmael. Some years ago...");
+    let first_sentence = novel.split('.')
+        .next()
+        .expect("Could not find a '.'");
+    let i = ImportantExcerpt{ part: first_sentence };
+    println!("The excerpt is '{}'", i.part);
+
+    println!("Lifetime elision is when the lifetime is deduced from three basic rules:");
+    println!("1. Each parameter that is a reference gets its own lifetime parameter");
+    println!("2. If there is exactly one input lifetime parameter, that lifetime is assigned to all output lifetime parameters");
+    println!("3. If &self or &mut self is a parameter, then its lifetime is assigned to all output lifetime parameters");
+
+    impl<'a> ImportantExcerpt<'a> {
+        fn announce_and_return_part(&self, announcement: &str) -> &str {
+            println!("Attention please: {}", announcement);
+            self.part
+        }
+    }
+
+    println!("Announcing: {}", i.announce_and_return_part("this"));
+
 }

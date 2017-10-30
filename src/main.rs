@@ -58,6 +58,8 @@ fn main() {
     section10::generic_data_types_10_1();
     div();
     section10::traits_defining_shared_behavior_10_2();
+    div();
+    section10::validating_references_with_lifetimes_10_3();
 }
 
 fn div() {
